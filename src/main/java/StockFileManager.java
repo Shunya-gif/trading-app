@@ -26,7 +26,6 @@ public class StockFileManager {
                 List<String> splitLine = List.of(line.split(","));
                 Stock stock = new Stock(splitLine.get(0),splitLine.get(1),Market.fromShortName(splitLine.get(2)),Long.parseLong(splitLine.get(3)), LocalDate.parse(splitLine.get(4),dateTimeFormatter));
                 stockManager.addStock(stock);
-                System.out.println(line);
             }
             return stockManager;
         } catch (IOException e) {

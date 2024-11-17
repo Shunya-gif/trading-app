@@ -18,8 +18,7 @@ public class MainMenu {
             switch (userSelect){
                 case "1" ->
                     {System.out.println("銘柄マスタ一覧表示が選択されました。");
-                    StockFileManager stockFileManager = new StockFileManager();
-                    stockFileManager.readCsv();
+                    StockManager.displayStocks();
                     }
                 case "2" -> System.out.println("銘柄マスタ新規登録が選択されました。");
                 case "3" -> System.out.println("銘柄マスタ詳細表示が選択されました。");
