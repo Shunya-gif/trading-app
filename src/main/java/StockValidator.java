@@ -10,7 +10,7 @@ public class StockValidator {
     }
 
     public boolean validateProductName(String userInput){
-        return userInput.matches("^[A-Za-z0-9() ][A-Za-z0-9 .()]");
+        return userInput.matches("^[A-Za-z0-9()][A-Za-z0-9 .()]*$");
     }
 
     public boolean validateSharesIssued(long userInput){
