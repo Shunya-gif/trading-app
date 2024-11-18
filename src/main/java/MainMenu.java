@@ -23,8 +23,8 @@ public class MainMenu {
                     }
                 case "2" -> {
                     System.out.println("銘柄マスタ新規登録が選択されました。");
-                    StockRegistrant stockRegistrant = new StockRegistrant();
-                    stockRegistrant.registerStockData();
+                    StockFileManager stockFileManager = new StockFileManager();
+                    stockFileManager.writeCSV();
                 }
                 case "3" -> System.out.println("銘柄マスタ詳細表示が選択されました。");
                 case "4" -> System.out.println("取引履歴一覧表示が選択されました。");

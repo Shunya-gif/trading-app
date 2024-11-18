@@ -42,11 +42,11 @@ public class StockManager {
             tableCreator.createHorizontalLine(widthOfTable);
         }
     }
-    public String buildCSVLine(Stock stockToCSV){
+    public String buildCSVLine(){
         String separator = ",";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         StockRegistrant stockRegistrant = new StockRegistrant();
-        stockToCSV = stockRegistrant.registerStockData();
+        Stock stockToCSV = stockRegistrant.registerStockData();
         return stockToCSV.getTickerCode()+separator+stockToCSV.getProductName()+separator+stockToCSV.getExchangedMarket().getShortName()+separator+stockToCSV.getSharesIssued()+separator+stockToCSV.getListedDate().format(dateTimeFormatter);
     }
 }

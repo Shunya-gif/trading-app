@@ -1,30 +1,29 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class StockFileManager {
-    private static final String FILE_NAME = "japan_stock_data.csv";
+    private static final Path File_Path = Paths.get("src/main/data-files/japan_stock_data_copied.csv");
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
     public StockManager readCsv(){
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(FILE_NAME);
-
-        if (inputStream == null) {
-            System.out.println("リソースファイルが見つかりませんでした。");
-            return null;
-        }
         // InputStreamを使ってファイルを読み込む
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (BufferedReader reader = Files.newBufferedReader(File_Path, StandardCharsets.UTF_8)) {
             reader.readLine();//一行目（カラム）を読み捨てる。
             String line;
             StockManager stockManager = new StockManager();
             while ((line = reader.readLine()) != null) {
                 List<String> splitLine = List.of(line.split(","));
-                Stock stock = new Stock(splitLine.get(0),splitLine.get(1),Market.fromOtherName(splitLine.get(2)),Long.parseLong(splitLine.get(3)), LocalDate.parse(splitLine.get(4),dateTimeFormatter));
+                Stock stock = new Stock(splitLine.get(0), splitLine.get(1), Market.fromOtherName(splitLine.get(2)), Long.parseLong(splitLine.get(3)), LocalDate.parse(splitLine.get(4), dateTimeFormatter));
                 stockManager.addStock(stock);
             }
             return stockManager;
+        }catch (NoSuchFileException e){
+            System.out.println("ファイルが見つかりません。");
+            return null;
         } catch (IOException e) {
             System.out.println("ファイルの読み込みに失敗");
             return null;
@@ -37,11 +36,16 @@ public class StockFileManager {
         }
     }
     public void writeCSV(){
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(FILE_NAME);
-        if (inputStream == null) {
-            System.out.println("リソースファイルが見つかりませんでした。");
+        StockManager stockManager = new StockManager();
+        try(BufferedWriter writer = Files.newBufferedWriter(File_Path,StandardCharsets.UTF_8,StandardOpenOption.APPEND)){
+            String registerToCSV =  stockManager.buildCSVLine();
+            writer.write(registerToCSV);
+            writer.newLine();
+        }catch (NoSuchFileException e){
+            System.out.println("ファイルが見つかりません。");
+        } catch (IOException e) {
+            System.out.println("ファイルの読み込みに失敗");
         }
-        try(BufferedWriter writer = new BufferedWriter())
     }
     }
 
