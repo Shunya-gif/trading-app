@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class MainMenu {
     static Scanner scanUserInput = new Scanner(System.in);
+
     public static void startMenu(){
         System.out.println("株式銘柄取引システムを開始します。");
         while(true){
@@ -20,7 +21,11 @@ public class MainMenu {
                     {System.out.println("銘柄マスタ一覧表示が選択されました。");
                     StockManager.displayStocks();
                     }
-                case "2" -> System.out.println("銘柄マスタ新規登録が選択されました。");
+                case "2" -> {
+                    System.out.println("銘柄マスタ新規登録が選択されました。");
+                    StockRegistrant stockRegistrant = new StockRegistrant();
+                    stockRegistrant.registerStockData();
+                }
                 case "3" -> System.out.println("銘柄マスタ詳細表示が選択されました。");
                 case "4" -> System.out.println("取引履歴一覧表示が選択されました。");
                 case "5" -> System.out.println("取引データ新規登録が選択されました。");

@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -24,7 +21,7 @@ public class StockFileManager {
             StockManager stockManager = new StockManager();
             while ((line = reader.readLine()) != null) {
                 List<String> splitLine = List.of(line.split(","));
-                Stock stock = new Stock(splitLine.get(0),splitLine.get(1),Market.fromShortName(splitLine.get(2)),Long.parseLong(splitLine.get(3)), LocalDate.parse(splitLine.get(4),dateTimeFormatter));
+                Stock stock = new Stock(splitLine.get(0),splitLine.get(1),Market.fromOtherName(splitLine.get(2)),Long.parseLong(splitLine.get(3)), LocalDate.parse(splitLine.get(4),dateTimeFormatter));
                 stockManager.addStock(stock);
             }
             return stockManager;
@@ -38,6 +35,13 @@ public class StockFileManager {
             System.out.println("ファイル内の日付に無効な値が入力されています。");
             return null;
         }
+    }
+    public void writeCSV(){
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(FILE_NAME);
+        if (inputStream == null) {
+            System.out.println("リソースファイルが見つかりませんでした。");
+        }
+        try(BufferedWriter writer = new BufferedWriter())
     }
     }
 

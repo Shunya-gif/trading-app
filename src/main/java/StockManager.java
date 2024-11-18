@@ -1,5 +1,7 @@
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StockManager {
     private final List<Stock> stockList = new ArrayList<>();
@@ -9,6 +11,20 @@ public class StockManager {
 
     public void addStock(Stock stock) {
         stockList.add(stock);
+    }
+    public boolean isAlreadyRegistered(String codeUserInput){
+        StockFileManager stockFileManager = new StockFileManager();
+        StockManager stocksFromCsv = stockFileManager.readCsv();
+        if(stocksFromCsv == null){
+            return false;
+        }else{
+            for (Stock stock :stocksFromCsv.stockList){
+                if(Objects.equals(codeUserInput, stock.getTickerCode())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public static void displayStocks(){
         StockFileManager stockFileManager = new StockFileManager();
@@ -25,5 +41,12 @@ public class StockManager {
             }
             tableCreator.createHorizontalLine(widthOfTable);
         }
+    }
+    public String buildCSVLine(Stock stockToCSV){
+        String separator = ",";
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        StockRegistrant stockRegistrant = new StockRegistrant();
+        stockToCSV = stockRegistrant.registerStockData();
+        return stockToCSV.getTickerCode()+separator+stockToCSV.getProductName()+separator+stockToCSV.getExchangedMarket().getShortName()+separator+stockToCSV.getSharesIssued()+separator+stockToCSV.getListedDate().format(dateTimeFormatter);
     }
 }

@@ -1,14 +1,16 @@
 public enum Market {
-    Prime("P","プライム"),
-    Standard("S","スタンダード"),
-    Growth("G","グロース"),
-    TokyoPRO("PRO","Tokyo PRO");
+    Prime("P","プライム","PRIME"),
+    Standard("S","スタンダード","STANDARD"),
+    Growth("G","グロース","GROWTH"),
+    TokyoPRO("PRO","Tokyo PRO","TOKYO PRO");
     private final String shortName;
     private final String japannedName;
+    private final String fullName;
 
-    Market(String shortName, String japannedName) {
+    Market(String shortName, String japannedName,String fullName) {
         this.shortName = shortName;
         this.japannedName = japannedName;
+        this.fullName = fullName;
     }
 
     public String getShortName() {
@@ -17,13 +19,19 @@ public enum Market {
     public String getJapannedName() {
         return japannedName;
     }
-    public static Market fromShortName(String shortName) {
+    public String getFullName() {
+        return fullName;
+    }
+
+    public static Market fromOtherName(String userInput) {
         for (Market market : Market.values()) {
-            if (market.getShortName().equals(shortName)) {
+            if (market.getShortName().equals(userInput)||market.getFullName().equals(userInput)) {
                 return market;
             }
         }
-        throw new IllegalArgumentException("No enum constant with shortName: " + shortName);
+        throw new IllegalArgumentException(userInput+"に対応する上場市場はありません。");
     }
+
+
 
 }
