@@ -1,3 +1,5 @@
+package trading_app.Stock;
+
 public enum Market {
     Prime("P","プライム","PRIME"),
     Standard("S","スタンダード","STANDARD"),

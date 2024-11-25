@@ -7,7 +7,7 @@ group = "org.example"
 version = "1.0-SNAPSHOT"
 
 application{
-    mainClass.set("Main")
+    mainClass.set("trading_app.Main")
 }
 tasks.withType<JavaExec>{
     standardInput = System.`in`
@@ -30,6 +30,6 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.withType<Jar>{
     archiveBaseName = "trading-app"
     manifest{
-        attributes["Main-Class"] = "Main"
+        attributes["Main-Class"] = "trading_app.Main"
     }
 }

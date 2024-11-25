@@ -1,3 +1,7 @@
+package trading_app;
+
+import trading_app.Stock.Stock;
+
 public class TableCreator {
     public void createHorizontalLine(int widthOfTable){
         System.out.print("|");
@@ -14,7 +18,7 @@ public class TableCreator {
         }
     }
     public void createStockColumns(){
-        System.out.printf("| %4s | %-31s | %-8s | %16s | %10s |%n","Code","Product Name","Market","Shares Issued","Listed Date");
+        System.out.printf("| %4s | %-31s | %-8s | %16s | %10s |%n","Code","Product Name","Stock.Market","Shares Issued","Listed Date");
     }
     public  void buildStockDisplayLine(Stock stock){
         System.out.printf("| %4s | %-31s | %-8s | %,16d | %tY/%<tm/%<td  |%n"

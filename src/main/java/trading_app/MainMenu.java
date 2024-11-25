@@ -1,3 +1,6 @@
+package trading_app;
+
+import trading_app.Stock.*;
 
 import java.util.Scanner;
 
@@ -26,7 +29,11 @@ public class MainMenu {
                     StockFileManager stockFileManager = new StockFileManager();
                     stockFileManager.writeCSV();
                 }
-                case "3" -> System.out.println("銘柄マスタ詳細表示が選択されました。");
+                case "3" -> {
+                    System.out.println("銘柄マスタ詳細表示が選択されました。");
+                    StockDiscloser stockDiscloser = new StockDiscloser();
+                    stockDiscloser.showStockProperty();
+                }
                 case "4" -> System.out.println("取引履歴一覧表示が選択されました。");
                 case "5" -> System.out.println("取引データ新規登録が選択されました。");
                 case "9" -> {

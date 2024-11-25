@@ -1,3 +1,7 @@
+package trading_app.Stock;
+
+import trading_app.TableCreator;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +29,20 @@ public class StockManager {
             }
         }
         return false;
+    }
+    public Stock searchStockFromCode(String codeUserInput){
+        StockFileManager stockFileManager = new StockFileManager();
+        StockManager stocksFromCSV = stockFileManager.readCsv();
+        if(stocksFromCSV == null){
+            throw new NullPointerException("CSVからの受取に失敗。");
+        }else {
+            for (Stock stock : stocksFromCSV.stockList) {
+                if (Objects.equals(codeUserInput, stock.getTickerCode())) {
+                    return stock;
+                }
+            }
+        }
+        throw new NullPointerException("一致する銘柄がありません。");
     }
     public static void displayStocks(){
         StockFileManager stockFileManager = new StockFileManager();

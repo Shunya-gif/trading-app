@@ -1,3 +1,5 @@
+package trading_app.Stock;
+
 public class StockValidator {
     /**
      *
