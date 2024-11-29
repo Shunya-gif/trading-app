@@ -1,8 +1,9 @@
 package trading_app.Trade;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class TradeDataValidator {
     /**
@@ -21,8 +22,21 @@ public class TradeDataValidator {
     public boolean isHundredfold(long quantityUserInput) {
         return (quantityUserInput % 100 == 0);
     }
-    public BigDecimal validateUnitPrice(BigDecimal userInput){
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
-        return formatter.format(userInput);
+
+    public boolean validateUnitPrice(String userInput){
+        BigDecimal registerToCSV = new BigDecimal(userInput);
+        return registerToCSV.signum() >0;
+    }
+    public boolean isPastDate(LocalDateTime userInput){
+        return userInput.isBefore(LocalDateTime.now());
+    }
+    public boolean isWeekDay(LocalDateTime userInput){
+        return !(userInput.getDayOfWeek().equals(DayOfWeek.SATURDAY)||userInput.getDayOfWeek().equals(DayOfWeek.SUNDAY));
+    }
+    public boolean marketIsOpen(LocalDateTime userInput){
+        LocalTime marketOpen = LocalTime.of(9,0).minusNanos(1);
+        LocalTime marketClose = LocalTime.of(15,30).plusNanos(1);
+        return userInput.toLocalTime().isAfter(marketOpen)&&userInput.toLocalTime().isBefore(marketClose);
     }
 }
+

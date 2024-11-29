@@ -1,6 +1,7 @@
 package trading_app;
 
 import trading_app.Stock.*;
+import trading_app.Trade.TradeDataRegistrant;
 
 import java.util.Scanner;
 
@@ -35,7 +36,11 @@ public class MainMenu {
                     stockDiscloser.showStockProperty();
                 }
                 case "4" -> System.out.println("取引履歴一覧表示が選択されました。");
-                case "5" -> System.out.println("取引データ新規登録が選択されました。");
+                case "5" -> {
+                    System.out.println("取引データ新規登録が選択されました。");
+                    TradeDataRegistrant tradeDataRegistrant = new TradeDataRegistrant();
+                    tradeDataRegistrant.registerTradeData();
+                }
                 case "9" -> {
                     System.out.println("システムを終了します。ご利用ありがとうございました。");
                     return;
