@@ -1,11 +1,9 @@
 package trading_app.Trade;
 
-import trading_app.Stock.Market;
 import trading_app.Stock.StockManager;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -127,7 +125,8 @@ public class TradeDataRegistrant {
         long quantity = registerQuantity();
         BigDecimal unitPrice  =registerUnitPrice();
         LocalDateTime tradedDateTime = registerTradedDate();
-        TradeData tradeData = new TradeData(tickerCode,productName,tradeSide,quantity,unitPrice,tradedDateTime);
+        LocalDateTime inputDateTime = LocalDateTime.now();
+        TradeData tradeData = new TradeData(tickerCode,productName,tradeSide,quantity,unitPrice,tradedDateTime,inputDateTime);
         System.out.println("以下の取引を登録します。");
         System.out.printf("""
                 　　　　　　銘柄コード：%s
