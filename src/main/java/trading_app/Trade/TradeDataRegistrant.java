@@ -104,32 +104,22 @@ public class TradeDataRegistrant {
         String userInput;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d k:m");
         while(true){
-            System.out.println("過去の取引日時をyyyy/MM/dd hh:mm形式で入力してください%n" +
+            System.out.printf("過去の取引日時をyyyy/MM/dd hh:mm形式で入力してください%n" +
                     "(時刻は24時間表記)%n" +
                     "日本取引所は平日の9:00から15:30まで営業しています。%n>");
             userInput  =scanner.nextLine();
             try{
                 LocalDateTime parsedInput = LocalDateTime.parse(userInput,formatter);
-                if(tradeDataValidator.isPastDate(parsedInput)){
-                    if(tradeDataValidator.tradeIsOver(parsedInput,tradeData)) {
-                        if (tradeDataValidator.isWeekDay(parsedInput)) {
-                            if (tradeDataValidator.marketIsOpen(parsedInput)) {
-                                tradeData.setTradedDateTime(parsedInput);
-                                return;
-                            } else {
-                                System.out.println("日本取引所の営業時間外です。");
-                            }
-                        } else {
-                            System.out.println("土日が入力されています。");
-                        }
-                    }else{
-                        System.out.println("既存の取引日時よりも古い取引日時が入力されています。");
-                    }
-                }else{
-                    System.out.println("未来の日時が入力されています。");
-                }
+                tradeDataValidator.isPastDate(parsedInput);
+                tradeDataValidator.tradeIsOver(parsedInput,tradeData);
+                tradeDataValidator.isWeekDay(parsedInput);
+                tradeDataValidator.marketIsOpen(parsedInput);
+                tradeData.setTradedDateTime(parsedInput);
+                return;
             }catch (DateTimeParseException e){
                 System.out.println(userInput+"を日付に変換できません");
+            }catch (IllegalArgumentException e){
+                System.out.println(e.getLocalizedMessage());
             }
         }
     }

@@ -41,22 +41,30 @@ public class TradeDataValidator {
         BigDecimal registerToCSV = new BigDecimal(userInput);
         return registerToCSV.signum() >0;
     }
-    public boolean isPastDate(LocalDateTime userInput){
-        return userInput.isBefore(LocalDateTime.now());
+    public void isPastDate(LocalDateTime userInput){
+        if(userInput.isAfter(LocalDateTime.now())){
+            throw new IllegalArgumentException("未来の日時が入力されています。");
+        }
     }
-    public boolean isWeekDay(LocalDateTime userInput){
-        return !(userInput.getDayOfWeek().equals(DayOfWeek.SATURDAY)||userInput.getDayOfWeek().equals(DayOfWeek.SUNDAY));
+    public void isWeekDay(LocalDateTime userInput){
+        if(userInput.getDayOfWeek()==DayOfWeek.SATURDAY||userInput.getDayOfWeek()==DayOfWeek.SUNDAY){
+            throw new IllegalArgumentException("土日が入力されています。");
+        }
     }
-    public boolean marketIsOpen(LocalDateTime userInput){
+    public void marketIsOpen(LocalDateTime userInput){
         LocalTime marketOpen = LocalTime.of(9,0).minusNanos(1);
         LocalTime marketClose = LocalTime.of(15,30).plusNanos(1);
-        return userInput.toLocalTime().isAfter(marketOpen)&&userInput.toLocalTime().isBefore(marketClose);
+        if(userInput.toLocalTime().isBefore(marketOpen)||userInput.toLocalTime().isAfter(marketClose)){
+            throw new IllegalArgumentException("日本取引所の営業時間外です。");
+        }
     }
-    public boolean tradeIsOver(LocalDateTime userInput ,TradeData tradeData){
+    public void tradeIsOver(LocalDateTime userInput ,TradeData tradeData){
         TradeDataFileManager tradeDataFileManager = new TradeDataFileManager();
         HoldingManager holdingManager = new HoldingManager();
         Holding holding = holdingManager.calculateHolding(tradeDataFileManager.readCsv()).get(tradeData.getTickerCode());
-        return holding == null || !userInput.isBefore(holding.getLatestTradeDateTime());
+        if(holding!=null&& userInput.isBefore(holding.getLatestTradeDateTime())){
+            throw new IllegalArgumentException(holding.getLatestTradeDateTime()+"以前の取引は入力できません");
+        }
     }
 }
 

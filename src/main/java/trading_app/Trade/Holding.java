@@ -24,29 +24,16 @@ public class Holding {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
-        this.quantity = quantity;
-    }
 
     public BigDecimal getAverageUnitPrice() {
         return averageUnitPrice;
     }
 
-    public void setAverageUnitPrice(BigDecimal averageUnitPrice) {
-        this.averageUnitPrice = averageUnitPrice;
-    }
 
     public BigDecimal getRealisedProfitAndLoss() {
         return realisedProfitAndLoss;
     }
 
-    public void setRealisedProfitAndLoss(BigDecimal realisedProfitAndLoss) {
-        this.realisedProfitAndLoss = realisedProfitAndLoss;
-    }
-
-    public void setLatestTradeDateTime(LocalDateTime latestTradeDateTime) {
-        this.latestTradeDateTime = latestTradeDateTime;
-    }
 
     public LocalDateTime getLatestTradeDateTime() {
         return latestTradeDateTime;
