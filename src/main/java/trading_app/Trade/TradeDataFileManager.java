@@ -14,7 +14,6 @@ public class TradeDataFileManager {
         private static final Path File_Path = Paths.get("src/main/data-files/trade_data_copied.csv");
 
         public TradeManager readCsv(){
-            // InputStreamを使ってファイルを読み込む
             try (BufferedReader reader = Files.newBufferedReader(File_Path, StandardCharsets.UTF_8)) {
                 reader.readLine();//一行目（カラム）を読み捨てる。
                 String line;

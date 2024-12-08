@@ -1,6 +1,7 @@
 package trading_app;
 
 import trading_app.Stock.*;
+import trading_app.Trade.HoldingManager;
 import trading_app.Trade.TradeDataFileManager;
 import trading_app.Trade.TradeManager;
 
@@ -18,6 +19,7 @@ public class MainMenu {
                     "3.銘柄マスタ詳細表示%n" +
                     "4.取引履歴一覧表示%n"+
                     "5.取引データ新規登録%n" +
+                    "6.保有ポジション一覧表示%n" +
                     "9.アプリケーションを終了する%n" +
                     ">");
             String userSelect = scanUserInput.nextLine();
@@ -45,6 +47,11 @@ public class MainMenu {
                     System.out.println("取引データ新規登録が選択されました。");
                     TradeDataFileManager tradeDataFileManager = new TradeDataFileManager();
                     tradeDataFileManager.writeCSV();
+                }
+                case "6" -> {
+                    System.out.println("保有ポジション一覧表示が選択されました。");
+                    HoldingManager holdingManager = new HoldingManager();
+                    holdingManager.displayHoldings();
                 }
                 case "9" -> {
                     System.out.println("システムを終了します。ご利用ありがとうございました。");

@@ -12,7 +12,7 @@ public class TradeData {
     private long quantity;
     private BigDecimal unitPrice;
     private LocalDateTime tradedDateTime;
-    private final LocalDateTime inputDateTime;
+    private  LocalDateTime inputDateTime;
     TradeDataValidator tradeDataValidator = new TradeDataValidator();
     StockValidator stockValidator = new StockValidator();
     public TradeData(String tickerCode, String productName, Side side, long quantity, BigDecimal unitPrice, LocalDateTime tradedDateTime,LocalDateTime inputDateTime) {
@@ -24,7 +24,8 @@ public class TradeData {
         this.tradedDateTime = tradedDateTime;
         this.inputDateTime = inputDateTime;
     }
-
+    public TradeData() {
+    }
     public String getTickerCode() {
         return tickerCode;
     }
@@ -87,5 +88,9 @@ public class TradeData {
 
     public LocalDateTime getInputDateTime() {
         return inputDateTime;
+    }
+
+    public void setInputDateTime(LocalDateTime inputDateTime) {
+        this.inputDateTime = inputDateTime;
     }
 }

@@ -9,8 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 public class TradeDataRegistrant {
+    TradeData tradeData = new TradeData();
     TradeDataValidator tradeDataValidator = new TradeDataValidator();
-    public String registerTickerCode(){
+    public void registerTickerCode(){
         Scanner scanner = new Scanner(System.in);
         StockManager stockManager = new StockManager();
         String userInput;
@@ -21,7 +22,8 @@ public class TradeDataRegistrant {
             userInput = scanner.nextLine();
             if(tradeDataValidator.validateTickerCode(userInput)){
                 if(stockManager.isAlreadyRegistered(userInput)){
-                    return userInput;
+                    tradeData.setTickerCode(userInput);
+                    return;
                 }
                 System.out.println("銘柄コード"+userInput+"は銘柄マスタに登録されていません");
             }else {
@@ -29,7 +31,7 @@ public class TradeDataRegistrant {
             }
         }
     }
-    public Side registerTradeSide(){
+    public void registerTradeSide(){
         Scanner scanner = new Scanner(System.in);
         String userInput;
         while (true) {
@@ -38,24 +40,33 @@ public class TradeDataRegistrant {
                     "買い：BuyまたはB%n>");
             userInput = scanner.nextLine().toUpperCase();
             try{
-                return Side.fromOtherName(userInput);
+                tradeData.setSide(Side.fromOtherName(userInput));
+                if(tradeDataValidator.canSellStock(tradeData)) {
+                    return;
+                }else{
+                    System.out.println("保有していない銘柄を売却することは出来ません。");
+                }
             }catch (IllegalArgumentException e){
                 System.out.println(e.getLocalizedMessage());
             }
         }
     }
-    public long registerQuantity() {
+    public void registerQuantity() {
         Scanner scanner = new Scanner(System.in);
         String userInput;
         while (true) {
             System.out.printf("取引の数量（正の整数）を100の倍数で入力してください%n>");
             userInput = scanner.nextLine().replace(",", "");
             try {
-
                 long parsedInput = Long.parseLong(userInput);
                 if (tradeDataValidator.validateQuantity(parsedInput)) {
                     if (tradeDataValidator.isHundredfold(parsedInput)) {
-                        return parsedInput;
+                        if(tradeDataValidator.quantityWillBePlus(parsedInput,tradeData)) {
+                            tradeData.setQuantity(parsedInput);
+                            return;
+                        }else{
+                            System.out.println("保有数量が負の数となる取引は入力できません");
+                        }
                     } else {
                         System.out.println("入力値が100の倍数ではありません。");
                     }
@@ -67,7 +78,7 @@ public class TradeDataRegistrant {
             }
         }
     }
-    public BigDecimal registerUnitPrice(){
+    public void registerUnitPrice(){
         Scanner scanner = new Scanner(System.in);
         String userInput;
         while (true){
@@ -78,7 +89,8 @@ public class TradeDataRegistrant {
                 if(userInput.endsWith(".")){
                     System.out.println("入力が小数点で終わっています。");
                 }else if(tradeDataValidator.validateUnitPrice(userInput)){
-                    return new BigDecimal(userInput);
+                    tradeData.setUnitPrice(new BigDecimal(userInput));
+                    return;
                 }else{
                     System.out.println("入力値が0または負の数になっています。");
                 }
@@ -87,7 +99,7 @@ public class TradeDataRegistrant {
             }
         }
     }
-    public LocalDateTime registerTradedDate(){
+    public void registerTradedDate(){
         Scanner scanner = new Scanner(System.in);
         String userInput;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/M/d k:m");
@@ -99,14 +111,19 @@ public class TradeDataRegistrant {
             try{
                 LocalDateTime parsedInput = LocalDateTime.parse(userInput,formatter);
                 if(tradeDataValidator.isPastDate(parsedInput)){
-                    if(tradeDataValidator.isWeekDay(parsedInput)){
-                        if(tradeDataValidator.marketIsOpen(parsedInput)){
-                          return parsedInput;
-                        }else{
-                            System.out.println("日本取引所の営業時間外です。");
+                    if(tradeDataValidator.tradeIsOver(parsedInput,tradeData)) {
+                        if (tradeDataValidator.isWeekDay(parsedInput)) {
+                            if (tradeDataValidator.marketIsOpen(parsedInput)) {
+                                tradeData.setTradedDateTime(parsedInput);
+                                return;
+                            } else {
+                                System.out.println("日本取引所の営業時間外です。");
+                            }
+                        } else {
+                            System.out.println("土日が入力されています。");
                         }
-                    }else {
-                        System.out.println("土日が入力されています。");
+                    }else{
+                        System.out.println("既存の取引日時よりも古い取引日時が入力されています。");
                     }
                 }else{
                     System.out.println("未来の日時が入力されています。");
@@ -119,14 +136,13 @@ public class TradeDataRegistrant {
     public TradeData registerTradeData(){
         StockManager stockManager = new StockManager();
         DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
-        String tickerCode = registerTickerCode();
-        String productName = stockManager.searchStockFromCode(tickerCode).getProductName();
-        Side tradeSide = registerTradeSide();
-        long quantity = registerQuantity();
-        BigDecimal unitPrice  =registerUnitPrice();
-        LocalDateTime tradedDateTime = registerTradedDate();
-        LocalDateTime inputDateTime = LocalDateTime.now();
-        TradeData tradeData = new TradeData(tickerCode,productName,tradeSide,quantity,unitPrice,tradedDateTime,inputDateTime);
+        registerTickerCode();
+        registerTradeSide();
+        registerQuantity();
+        registerUnitPrice();
+        registerTradedDate();
+        tradeData.setProductName(stockManager.searchStockFromCode(tradeData.getTickerCode()).getProductName());
+        tradeData.setInputDateTime(LocalDateTime.now());
         System.out.println("以下の取引を登録します。");
         System.out.printf("""
                 　　　　　　銘柄コード：%s
@@ -135,7 +151,7 @@ public class TradeDataRegistrant {
                 　　　　　　　取引数量：%,d個
                 　　　　　　　取引単価：%s円
                 　　　　　　　取引日時：%tY/%<tm/%<td %<tH:%<tM
-                """,tickerCode,productName,tradeSide.name(),quantity,decimalFormat.format(unitPrice),tradedDateTime);
+                """,tradeData.getTickerCode(),tradeData.getProductName(),tradeData.getSide().name(),tradeData.getQuantity(),decimalFormat.format(tradeData.getUnitPrice()),tradeData.getTradedDateTime());
         return tradeData;
     }
 }
